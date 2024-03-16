@@ -1,0 +1,37 @@
+{
+  "FontSize": 13,
+
+  "FontFamily": "Segoe UI",
+
+  "TextWrap": true,
+
+  "StateBar": true,
+
+  "UnicodeBar": true,
+
+  "Statusbar": true,
+
+  "TabSize": 0,
+
+  "Autosave": 0,
+
+  "PromptToSave": true,
+
+  "Diff": false,
+
+  "LineNumbers": false,
+
+  "RecentFiles": [],
+
+  "Theme": "Default",
+
+  "StartupNewFile": true,
+
+  "MaxRecentFiles": 9,
+
+  "ExitMinimizeToTray": false,
+
+  "ConvertTabToSpaces": false,
+
+  "LastUnicodeChar": ""
+}

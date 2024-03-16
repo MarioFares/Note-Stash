@@ -1,0 +1,205 @@
+<base:WindowBase x:Class="NoteStash.Views.SettingsView"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                 xmlns:base="clr-namespace:NoteStash.Base"
+                 xmlns:c="clr-namespace:NoteStash.Converters"
+                 xmlns:vm="clr-namespace:NoteStash.ViewModels"
+                 mc:Ignorable="d"
+                 d:DataContext="{d:DesignInstance Type=vm:SettingsViewModel}"
+                 ResizeMode="CanResize"
+                 Height="500"
+                 Width="600"
+                 WindowStyle="None"
+                 WindowState="Normal"
+                 FontFamily="Segoe UI"
+                 FontSize="12"
+                 WindowStartupLocation="CenterOwner"
+                 BorderThickness="1"
+                 BorderBrush="{DynamicResource App.BorderBrush}"
+                 Foreground="{DynamicResource App.ForegroundBrush}"
+                 Background="{DynamicResource App.BackgroundBrush}"
+                 Closing="OnClosing"
+                 Title="Settings">
+    <Window.Resources>
+        <c:BooleanToInverseBooleanConverter x:Key="BooleanToInverseBooleanConverter" />
+    </Window.Resources>
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="1"
+                      ResizeBorderThickness="5">
+        </WindowChrome>
+    </WindowChrome.WindowChrome>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <DockPanel MouseDown="MoveWindow"
+                   Background="Transparent"
+                   Grid.Row="0"
+                   Grid.Column="0">
+            <Button x:Name="CloseButton"
+                    Style="{StaticResource CloseButtonStyle}"
+                    Width="50"
+                    BorderThickness="0"
+                    Height="37"
+                    HorizontalAlignment="Right"
+                    Click="CloseWindow">
+                <Image Style="{DynamicResource IconChromeClose}" />
+            </Button>
+        </DockPanel>
+        <ScrollViewer x:Name="MainScrollViewer"
+                      Grid.Column="0"
+                      Grid.Row="1"
+                      CanContentScroll="False"
+                      VerticalScrollBarVisibility="Auto">
+            <StackPanel Orientation="Vertical"
+                        Margin="30 0 30 20">
+                <TextBlock Margin="0 0 30 20"
+                           Grid.Row="0"
+                           Grid.Column="0"
+                           Text="Settings"
+                           FontSize="24pt"
+                           FontWeight="Bold">
+                </TextBlock>
+                <ui:CardExpander Header="Theme" 
+                                 Margin="0 0 0 20">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="20" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0"
+                                   Grid.Column="0"
+                                   Text="Current"
+                                   VerticalAlignment="Center" />
+                        <ComboBox x:Name="ThemesCombobox"
+                                  Grid.Row="0"
+                                  Grid.Column="1"
+                                  ItemsSource="{Binding Themes}"
+                                  SelectedItem="{Binding SelectedTheme}" />
+                        <StackPanel Orientation="Horizontal"
+                                    HorizontalAlignment="Center"
+                                    Grid.Row="2"
+                                    Grid.Column="0"
+                                    Grid.ColumnSpan="2">
+                            <Button Content="Refresh"
+                                    Margin="5"
+                                    Command="{Binding RefreshThemesCommand}" />
+                            <Button Content="Open Folder"
+                                    Command="{Binding OpenThemesFolderCommand}"
+                                    Margin="5" />
+                        </StackPanel>
+                    </Grid>
+                </ui:CardExpander>
+                <ui:CardExpander Header="Font"
+                                 Margin="0 0 0 20">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="10" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="20" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0"
+                                   Grid.Column="0"
+                                   Text="Family"
+                                   VerticalAlignment="Center" />
+                        <ComboBox x:Name="FontFamilyCombobox"
+                                  Grid.Row="0"
+                                  Grid.Column="1"
+                                  SelectedItem="{Binding SelectedFontFamily, Mode=TwoWay}"
+                                  ItemsSource="{Binding Source={x:Static Fonts.SystemFontFamilies}}" />
+                        <TextBlock Grid.Row="2"
+                                   Grid.Column="0"
+                                   Text="Size"
+                                   VerticalAlignment="Center" />
+                        <ComboBox x:Name="FontSizeCombobox"
+                                  Text="{Binding SelectedFontSize, Mode=TwoWay}"
+                                  ItemsSource="{Binding FontSizes}"
+                                  IsEditable="True"
+                                  Grid.Row="2"
+                                  Grid.Column="1" />
+                        <TextBlock Grid.Column="0"
+                                   Grid.ColumnSpan="2"
+                                   Grid.Row="4"
+                                   TextWrapping="Wrap"
+                                   TextAlignment="Center"
+                                   FontSize="{Binding SelectedFontSize, Mode=TwoWay}"
+                                   FontFamily="{Binding SelectedFontFamily}"
+                                   Text="The sound of ocean waves calms my soul." />
+                    </Grid>
+                </ui:CardExpander>
+                <ui:CardExpander Header="Startup"
+                                 Margin="0 0 0 20">
+                    <StackPanel Orientation="Vertical">
+                        <RadioButton Content="New File"
+                                     GroupName="Startup"
+                                     IsChecked="{Binding StartupNewFile}" />
+                        <RadioButton Content="Recent File"
+                                     GroupName="Startup"
+                                     IsChecked="{Binding StartupNewFile, Converter={StaticResource BooleanToInverseBooleanConverter}}" />
+                    </StackPanel>
+                </ui:CardExpander>
+                <ui:CardExpander Header="Exit"
+                                 Margin="0 0 0 20">
+                    <StackPanel Orientation="Vertical">
+                        <RadioButton Content="Shutdown Application"
+                                     GroupName="Exit"
+                                     IsChecked="{Binding ExitMinimizeToTray, Converter={StaticResource BooleanToInverseBooleanConverter}}" />
+                        <RadioButton Content="Minimize to Tray"
+                                     GroupName="Exit"
+                                     IsChecked="{Binding ExitMinimizeToTray}" />
+                    </StackPanel>
+                </ui:CardExpander>
+                <ui:CardExpander Header="Recent Files"
+                                 Margin="0 0 0 20">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="20" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0"
+                                   Grid.Column="0"
+                                   Text="Max Count"
+                                   VerticalAlignment="Center" />
+                        <ComboBox x:Name="MaxRecentFilesTextBox"
+                                  Grid.Row="0"
+                                  Grid.Column="1"
+                                  SelectedItem="{Binding SelectedMaxRecentFiles, Mode=TwoWay}"
+                                  ItemsSource="{Binding MaxRecentFiles}" />
+                        <StackPanel Grid.Row="2"
+                                    Grid.Column="0"
+                                    Grid.ColumnSpan="2"
+                                    HorizontalAlignment="Center"
+                                    Orientation="Horizontal">
+                            <Button Content="Clear Files"
+                                    Command="{Binding ClearRecentFilesCommand}" />
+                        </StackPanel>
+                    </Grid>
+                </ui:CardExpander>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+
+</base:WindowBase>
