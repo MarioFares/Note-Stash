@@ -1023,8 +1023,7 @@
               Grid.Row="1"
               Grid.RowSpan="2">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition
-                        Width="{Binding ElementName=DiffBox, Path=Visibility, Converter={StaticResource VisibilityToWidthConverter}}" />
+                <ColumnDefinition Width="{Binding ElementName=DiffBox, Path=Visibility, Converter={StaticResource VisibilityToWidthConverter}}" />
                 <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
@@ -1061,6 +1060,103 @@
                           IsEnabled="False"
                           Margin="-5, 0"
                           Visibility="{Binding Diff, Converter={StaticResource BooleanToVisibilityConverter}}" />
+            <Border Grid.Row="0"
+                    Grid.Column="2"
+                    Panel.ZIndex="1000"
+                    Width="250"
+                    CornerRadius="8"
+                    Background="{DynamicResource App.BackgroundBrush}"
+                    Opacity="{Binding InfoPopupOpacity, Mode=TwoWay}"
+                    Visibility="{Binding InfoPopupVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    Margin="0 10 10 0">
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Setter Property="Visibility"
+                                Value="Visible" />
+                        <Style.Triggers>
+
+                            <!-- Show trigger from ViewModel -->
+                            <DataTrigger Binding="{Binding InfoPopupOpacity}"
+                                         Value="1">
+                                <Setter Property="Visibility"
+                                        Value="Visible" />
+
+                                <DataTrigger.EnterActions>
+                                    <BeginStoryboard x:Name="FadeStoryboard">
+                                        <Storyboard>
+                                            <!-- Wait 3 seconds -->
+                                            <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                             From="1"
+                                                             To="1"
+                                                             BeginTime="0:0:3"
+                                                             Duration="0:0:0" />
+
+                                            <!-- Fade over 5 seconds -->
+                                            <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                             From="1"
+                                                             To="0"
+                                                             BeginTime="0:0:3"
+                                                             Duration="0:0:5"
+                                                             FillBehavior="HoldEnd" />
+
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </DataTrigger.EnterActions>
+
+                                <DataTrigger.ExitActions>
+                                    <StopStoryboard BeginStoryboardName="FadeStoryboard" />
+                                </DataTrigger.ExitActions>
+                            </DataTrigger>
+
+                            <!-- Hide when visibility is false -->
+                            <DataTrigger Binding="{Binding InfoPopupVisible}"
+                                         Value="False">
+                                <Setter Property="Visibility"
+                                        Value="Collapsed" />
+                            </DataTrigger>
+
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="20" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="10" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="20" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="{Binding InfoPopupText}"
+                               Grid.Row="0"
+                               Grid.RowSpan="2"
+                               Grid.Column="0"
+                               TextWrapping="Wrap"
+                               Foreground="{DynamicResource App.ForegroundBrush}"
+                               FontSize="14"
+                               Margin="10 10 10 0"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Top" />
+                    <Button x:Name="InfoCloseButton"
+                            Grid.Column="1"
+                            Grid.Row="0"
+                            Style="{StaticResource CloseButtonStyle}"
+                            Background="{DynamicResource App.BackgroundBrush}"
+                            Width="20"
+                            BorderThickness="0"
+                            Height="20"
+                            HorizontalAlignment="Right"
+                            Margin="0 5 5 0"
+                            VerticalAlignment="Top"
+                            Cursor="Hand"
+                            Command="{Binding CloseInfoPopupCommand}">
+                        <Image Style="{DynamicResource IconChromeClose}" />
+                    </Button>
+                </Grid>
+            </Border>
             <c:TextEditor x:Name="InputBox"
                           Grid.Row="0"
                           Grid.Column="2"
@@ -1084,6 +1180,15 @@
                           Drop="InputBox_Drop">
                 <c:TextEditor.ContextMenu>
                     <ContextMenu Background="{DynamicResource App.BackgroundBrush}">
+                        <MenuItem Header="Explain"
+                                  Command="{Binding ExplainTextCommand}" />
+                        <MenuItem Header="Expand"
+                                  Command="{Binding ExpandOnTextCommand}" />
+                        <MenuItem Header="Summarize"
+                                  Command="{Binding SummarizeTextCommand}" />
+                        <MenuItem Header="Fix Grammar"
+                                  Command="{Binding FixGrammarCommand}" />
+                        <Separator />
                         <MenuItem Header="Cut"
                                   Command="ApplicationCommands.Cut" />
                         <MenuItem Header="Copy"

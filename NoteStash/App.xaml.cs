@@ -8,8 +8,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows;
-using System.Windows.Interop;
-using System.Windows.Media;
 using FontFamily = System.Windows.Media.FontFamily;
 
 namespace NoteStash;
@@ -47,6 +45,7 @@ public sealed partial class App
 	{
 		ServiceCollection services = new();
 
+		services.AddSingleton<Settings>();
 		services.AddSingleton<MainView>();
 		services.AddSingleton<MainViewModel>();
 		services.AddSingleton<ActionPaletteViewModel>();
@@ -54,12 +53,12 @@ public sealed partial class App
 		services.AddTransient<InputDialogViewModel>();
 		services.AddTransient<SettingsViewModel>();
 		services.AddSingleton<IDialogService, DialogService>();
+		services.AddSingleton<IAiService, AiService>();
 		services.AddSingleton<ITextEditorService, TextEditorService>(provider =>
 		{
 			MainView mainView = provider.GetRequiredService<MainView>();
 			return new TextEditorService(mainView.InputBox);
 		});
-		services.AddSingleton<Settings>();
 
 		return services.BuildServiceProvider();
 	}

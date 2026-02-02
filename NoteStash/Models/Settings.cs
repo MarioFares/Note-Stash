@@ -88,7 +88,13 @@ public sealed class Settings
 	[JsonProperty]
 	public string LastUnicodeChar { get; set; } = string.Empty;
 
-	public void Save()
+	[JsonProperty]
+	public string AiApiKey { get; set; } = string.Empty;
+
+	[JsonProperty]
+	public string AiModelName { get; set; } = "gemini-2.5-flash";
+
+    public void Save()
 	{
 		string jsonString = JsonConvert.SerializeObject(this, Formatting.Indented);
 		File.WriteAllText(Path.GetFullPath(SettingsFilePath), jsonString);

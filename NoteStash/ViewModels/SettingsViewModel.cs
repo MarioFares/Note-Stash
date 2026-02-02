@@ -15,108 +15,122 @@ namespace NoteStash.ViewModels;
 /// </summary>
 public partial class SettingsViewModel : ObservableObject
 {
-	private readonly IDialogService _dialogService;
-	private readonly Settings _settings;
+    private readonly IDialogService _dialogService;
+    private readonly Settings _settings;
 
-	public SettingsViewModel(IDialogService dialogService, Settings settings)
-	{
-		_dialogService = dialogService;
-		_settings = settings;
-		SelectedFontFamily = new FontFamily(_settings.FontFamily);
-		SelectedFontSize = _settings.FontSize;
-		StartupNewFile = _settings.StartupNewFile;
-		ExitMinimizeToTray = _settings.ExitMinimizeToTray;
-		FontSizes = new ObservableCollection<int>(new List<int>() { 8, 9, 10, 11, 12, 13, 14, 15, 16, 18, 20, 22, 24, 36, 48, 72 });
-		SelectedMaxRecentFiles = _settings.MaxRecentFiles;
-		MaxRecentFiles = new ObservableCollection<int>(Enumerable.Range(1, 30).ToList());
+    public SettingsViewModel(IDialogService dialogService, Settings settings)
+    {
+        _dialogService = dialogService;
+        _settings = settings;
+        SelectedFontFamily = new FontFamily(_settings.FontFamily);
+        SelectedFontSize = _settings.FontSize;
+        StartupNewFile = _settings.StartupNewFile;
+        ExitMinimizeToTray = _settings.ExitMinimizeToTray;
+        FontSizes = new ObservableCollection<int>(new List<int>() { 8, 9, 10, 11, 12, 13, 14, 15, 16, 18, 20, 22, 24, 36, 48, 72 });
+        SelectedMaxRecentFiles = _settings.MaxRecentFiles;
+        MaxRecentFiles = new ObservableCollection<int>(Enumerable.Range(1, 30).ToList());
+        AiModelName = _settings.AiModelName;
+        AiApiKey = _settings.AiApiKey;
 
-		string[] themeFiles = Directory.GetFiles(_settings.ThemesPath);
-		Themes = new ObservableCollection<string>(themeFiles.Select(e => Path.GetFileNameWithoutExtension(e)));
-		SelectedTheme = _settings.Theme;
-	}
+        string[] themeFiles = Directory.GetFiles(_settings.ThemesPath);
+        Themes = new ObservableCollection<string>(themeFiles.Select(e => Path.GetFileNameWithoutExtension(e)));
+        SelectedTheme = _settings.Theme;
+    }
 
-	/// <summary>
-	/// List of available themes in the themes directory.
-	/// </summary>
-	[ObservableProperty]
-	private ObservableCollection<string> _themes;
+    /// <summary>
+    /// List of available themes in the themes directory.
+    /// </summary>
+    [ObservableProperty]
+    private ObservableCollection<string> _themes;
 
-	private string _selectedTheme;
+    private string _selectedTheme;
 
-	/// <summary>
-	/// Currently selected theme.
-	/// </summary>
-	public string SelectedTheme
-	{
-		get => _selectedTheme;
-		set
-		{
-			if (!string.IsNullOrEmpty(value))
-			{
-				_dialogService.SetTheme(value);
-				SetProperty(ref _selectedTheme, value);
-			}
-		}
-	}
+    /// <summary>
+    /// Currently selected theme.
+    /// </summary>
+    public string SelectedTheme
+    {
+        get => _selectedTheme;
+        set
+        {
+            if (!string.IsNullOrEmpty(value))
+            {
+                _dialogService.SetTheme(value);
+                SetProperty(ref _selectedTheme, value);
+            }
+        }
+    }
 
-	/// <summary>
-	/// Currently selected font family.
-	/// </summary>
-	[ObservableProperty]
-	private FontFamily _selectedFontFamily;
+    /// <summary>
+    /// Currently selected font family.
+    /// </summary>
+    [ObservableProperty]
+    private FontFamily _selectedFontFamily;
 
-	/// <summary>
-	/// Currently selected font size
-	/// </summary>
-	[ObservableProperty]
-	private int _selectedFontSize;
+    /// <summary>
+    /// Currently selected font size
+    /// </summary>
+    [ObservableProperty]
+    private int _selectedFontSize;
 
-	/// <summary>
-	/// List of font sizes.
-	/// </summary>
-	public ObservableCollection<int> FontSizes { get; }
+    /// <summary>
+    /// List of font sizes.
+    /// </summary>
+    public ObservableCollection<int> FontSizes { get; }
 
-	/// <summary>
-	/// Gets or sets whether to start application with a new file or most recent file.
-	/// </summary>
-	public bool StartupNewFile { get; set; }
+    /// <summary>
+    /// Gets or sets whether to start application with a new file or most recent file.
+    /// </summary>
+    public bool StartupNewFile { get; set; }
 
-	/// <summary>
-	/// Gets or sets whether to minimize application when closed or shut it down.
-	/// </summary>
-	public bool ExitMinimizeToTray { get; set; }
+    /// <summary>
+    /// Gets or sets whether to minimize application when closed or shut it down.
+    /// </summary>
+    public bool ExitMinimizeToTray { get; set; }
 
-	/// <summary>
-	/// Gets or sets the collection of allowed recent files counts.
-	/// </summary>
-	public ObservableCollection<int> MaxRecentFiles { get; }
+    /// <summary>
+    /// Gets or sets the collection of allowed recent files counts.
+    /// </summary>
+    public ObservableCollection<int> MaxRecentFiles { get; }
 
-	/// <summary>
-	/// Gets or sets the maximum of recent files.
-	/// </summary>
-	public int SelectedMaxRecentFiles { get; set; }
+    /// <summary>
+    /// Gets or sets the maximum of recent files.
+    /// </summary>
+    public int SelectedMaxRecentFiles { get; set; }
 
-	public void SaveSettings()
-	{
-		_settings.FontFamily = SelectedFontFamily.ToString();
-		_settings.FontSize = SelectedFontSize;
-		_settings.StartupNewFile = StartupNewFile;
-		_settings.ExitMinimizeToTray = ExitMinimizeToTray;
-		_settings.Theme = SelectedTheme;
-		_settings.MaxRecentFiles = SelectedMaxRecentFiles;
-		_settings.Save();
-	}
+    /// <summary>
+    /// Gets or sets the name of the AI model to be used.
+    /// </summary>
+    public string AiModelName { get; set; }
 
-	[RelayCommand]
-	private void RefreshThemes()
-	{
-		string[] themeFiles = Directory.GetFiles(_settings.ThemesPath);
-		Themes = new ObservableCollection<string>(themeFiles.Select(e => Path.GetFileNameWithoutExtension(e)));
-	}
+    /// <summary>
+    /// Gets or sets the AI API key.
+    /// </summary>
+    public string AiApiKey { get; set; }
 
-	[RelayCommand]
-	private void OpenThemesFolder() => _dialogService.GotoDir(Path.GetFullPath(_settings.ThemesPath));
+    public void SaveSettings()
+    {
+        _settings.FontFamily = SelectedFontFamily.ToString();
+        _settings.FontSize = SelectedFontSize;
+        _settings.StartupNewFile = StartupNewFile;
+        _settings.ExitMinimizeToTray = ExitMinimizeToTray;
+        _settings.Theme = SelectedTheme;
+        _settings.MaxRecentFiles = SelectedMaxRecentFiles;
+        _settings.AiModelName = AiModelName;
+        _settings.AiApiKey = AiApiKey;
+        _settings.Save();
+    }
 
-	[RelayCommand]
-	private void ClearRecentFiles() => _settings.RecentFiles.Clear();
+    [RelayCommand]
+    private void RefreshThemes()
+    {
+        string[] themeFiles = Directory.GetFiles(_settings.ThemesPath);
+        Themes = new ObservableCollection<string>(themeFiles.Select(e => Path.GetFileNameWithoutExtension(e)));
+    }
+
+    [RelayCommand]
+    private void OpenThemesFolder() => _dialogService.GotoDir(Path.GetFullPath(_settings.ThemesPath));
+
+    [RelayCommand]
+    private void ClearRecentFiles() => _settings.RecentFiles.Clear();
 }

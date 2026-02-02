@@ -198,6 +198,37 @@
                         </StackPanel>
                     </Grid>
                 </ui:CardExpander>
+                <ui:CardExpander Header="AI"
+                                 Margin="0 0 0 20">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="10" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="20" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0"
+                                   Grid.Column="0"
+                                   Text="Model Name"
+                                   VerticalAlignment="Center" />
+                        <TextBox x:Name="AiModelNameTextBox"
+                                  Grid.Row="0"
+                                  Grid.Column="1"
+                                  Text="{Binding AiModelName, Mode=TwoWay}" />
+                        <TextBlock Grid.Row="2"
+                                   Grid.Column="0"
+                                   Text="API Key"
+                                   VerticalAlignment="Center" />
+                        <TextBox x:Name="AiApiKey"
+                                  Grid.Row="2"
+                                  Grid.Column="1"
+                                  Text="{Binding AiApiKey, Mode=TwoWay}" />
+                    </Grid>
+                </ui:CardExpander>
             </StackPanel>
         </ScrollViewer>
     </Grid>

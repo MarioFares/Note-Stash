@@ -33,5 +33,9 @@
 
   "ConvertTabToSpaces": false,
 
-  "LastUnicodeChar": ""
+  "LastUnicodeChar": "",
+
+  "AiApiKey": "",
+
+  "AiModelName": "gemini-2.5-flash"
 }
