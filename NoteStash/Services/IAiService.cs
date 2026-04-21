@@ -8,5 +8,6 @@ namespace NoteStash.Services
         public Task<string> SummarizeText(string text);
         public Task<string> FixGrammar(string arg);
         public Task<string> ExplainText(string arg);
+        public Task<string> GenerateContent(string prompt);
     }
 }

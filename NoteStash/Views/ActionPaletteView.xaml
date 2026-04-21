@@ -1,19 +1,24 @@
 ﻿<Popup x:Class="NoteStash.Views.ActionPaletteView"
-       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-       xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-       xmlns:vm="clr-namespace:NoteStash.ViewModels"
-       mc:Ignorable="d"
-       d:DataContext="{d:DesignInstance Type=vm:ActionPaletteViewModel}"
-       IsOpen="{Binding IsOpen}"
-       AllowsTransparency="True"
-       Height="400"
-       Width="700"
-       Placement="Center"
-       Opened="Popup_Opened"
-       PreviewKeyDown="Popup_PreviewKeyDown">
+   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+   xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+   xmlns:vm="clr-namespace:NoteStash.ViewModels"
+   xmlns:converters="clr-namespace:NoteStash.Converters"
+   mc:Ignorable="d"
+   d:DataContext="{d:DesignInstance Type=vm:ActionPaletteViewModel}"
+   IsOpen="{Binding IsOpen}"
+   AllowsTransparency="True"
+   Height="400"
+   Width="700"
+   Placement="Center"
+   Opened="Popup_Opened"
+   PreviewKeyDown="Popup_PreviewKeyDown">
+<Popup.Resources>
+    <converters:BooleanToVisibilityConverter x:Key="BoolToVisibility" />
+    <converters:BooleanToInverseVisibilityConverter x:Key="BoolToVisibilityInverse" />
+</Popup.Resources>
     <Popup.InputBindings>
         <KeyBinding Key="Esc"
                     Command="{Binding HideCommand}" />
@@ -41,12 +46,14 @@
                         Grid.Row="1"
                         Grid.Column="1"
                         MinHeight="30" />
+            <!-- ListBox for normal mode -->
             <ListBox x:Name="ActionsListBox"
                      Grid.Row="3"
                      Grid.Column="1"
                      Padding="0"
                      SelectedIndex="{Binding SelectedIndex}"
-                     ItemsSource="{Binding FilteredActions}">
+                     ItemsSource="{Binding FilteredActions}"
+                     Visibility="{Binding IsAiMode, Converter={StaticResource BoolToVisibilityInverse}}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <StackPanel Orientation="Vertical"
@@ -91,6 +98,43 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ListBox>
+            <!-- AI Mode Content -->
+            <Grid Grid.Row="3"
+                  Grid.Column="1"
+                  Visibility="{Binding IsAiMode, Converter={StaticResource BoolToVisibility}}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <!-- Loading Indicator -->
+                <TextBlock x:Name="LoadingIndicator"
+                           Grid.Row="0"
+                           Text="Processing..."
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center"
+                           Foreground="Gray"
+                           Visibility="{Binding IsAiLoading, Converter={StaticResource BoolToVisibility}}" />
+                <!-- AI Output with ScrollViewer -->
+                <ScrollViewer Grid.Row="0"
+                              Visibility="{Binding IsAiLoading, Converter={StaticResource BoolToVisibilityInverse}}"
+                              VerticalScrollBarVisibility="Auto"
+                              HorizontalScrollBarVisibility="Disabled"
+                              Padding="10">
+                    <TextBlock x:Name="AiOutputBlock"
+                               Text="{Binding AiOutput}"
+                               TextWrapping="Wrap"
+                               Foreground="{DynamicResource App.ForegroundBrush}" />
+                </ScrollViewer>
+                <!-- Copy Button -->
+                <Button Grid.Row="1"
+                        HorizontalAlignment="Right"
+                        Margin="0 10 0 0"
+                        Padding="10 5"
+                        Command="{Binding CopyAiOutputCommand}"
+                        Visibility="{Binding IsAiLoading, Converter={StaticResource BoolToVisibilityInverse}}">
+                    Copy
+                </Button>
+            </Grid>
         </Grid>
     </Border>
 </Popup>

@@ -114,6 +114,9 @@ public class TextEditorService : ITextEditorService
 	public void SetSelectedText(string text) => _textEditor.SelectedText = text;
 
 	/// <inheritdoc />
+	public string GetSelectedText() => _textEditor.SelectedText;
+
+	/// <inheritdoc />
 	public void InsertTextAtLineStarts(string insertion) => _textEditor.InsertTextAtLineStarts(insertion);
 
 	/// <inheritdoc />

@@ -28,6 +28,8 @@ namespace NoteStash.Services
             return response?.Candidates?[0]?.Content?.Parts?[0].Text ?? "";
         }
 
+        async Task<string> IAiService.GenerateContent(string prompt) => await GenerateContent(prompt);
+
         public async Task<string> ExpandOnText(string text) => await GenerateContent("Expand on the following: " + text);
 
         public async Task<string> SummarizeText(string text) => await GenerateContent("Summarize the following: " + text);

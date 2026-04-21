@@ -29,6 +29,25 @@ public partial class ActionPaletteView
 	private void Popup_PreviewKeyDown(object sender, KeyEventArgs e)
 	{
 		ActionPaletteViewModel viewModel = (ActionPaletteViewModel)DataContext;
+		
+		
+		// In AI mode, handle Enter to execute the AI command
+		if (viewModel.IsAiMode)
+		{
+			if (e.Key == Key.Enter)
+			{
+				string searchText = SearchBox.Text ?? "";
+				if (searchText.Length > 1)
+				{
+					var instruction = searchText[1..].Trim();
+					_ = viewModel.ProcessAiInstruction(instruction);
+				}
+				e.Handled = true;
+			}
+			return;
+		}
+
+		// Normal mode: handle action list navigation
 		if (e.Key == Key.Enter && ActionsListBox.SelectedItem is ExecutableAction current)
 		{
 			viewModel.ExecuteAction(current);

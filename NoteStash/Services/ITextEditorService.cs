@@ -191,6 +191,12 @@ public interface ITextEditorService
 	public void SetSelectedText(string text);
 
 	/// <summary>
+	/// Gets the currently selected text.
+	/// </summary>
+	/// <returns>The selected text, or an empty string if nothing is selected.</returns>
+	public string GetSelectedText();
+
+	/// <summary>
 	/// Inserts the second argument string at the beginning of 
 	/// the lines of the first argument.
 	/// </summary>
